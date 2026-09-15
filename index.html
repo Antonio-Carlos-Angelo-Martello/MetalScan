@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1324" />
+    <title>MetalScan | Inteligência para estoque de aço</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div><strong>Metal<span>Scan</span></strong><small>Steel intelligence</small></div>
+        </div>
+        <nav class="nav">
+          <a class="nav-item active" href="#inicio"><span>⌂</span> Dashboard</a>
+          <div class="nav-group-label">Identificação</div>
+          <a class="nav-item" href="#material-identificacao"><span>⌾</span> Identificar material</a>
+          <a class="nav-item" href="#materiais" data-open-materials><span>◇</span> Materiais</a>
+          <a class="nav-item" href="#catalogo" data-open-catalogs><span>▤</span> Catálogos</a>
+          <a class="nav-item" href="#importacao"><span>↑</span> Importação</a>
+          <div class="nav-group-label">Estoque</div>
+          <a class="nav-item" href="#estoque" data-open-stock><span>▦</span> Estoque</a>
+          <a class="nav-item" href="#entradas" data-open-stock data-stock-action="entry"><span>＋</span> Entradas</a>
+          <a class="nav-item" href="#saidas" data-open-stock data-stock-action="exit"><span>−</span> Saídas</a>
+          <a class="nav-item" href="#movimentacoes" data-open-stock data-stock-action="history"><span>⇄</span> Movimentações</a>
+          <a class="nav-item" href="#locais" data-open-stock data-stock-action="locations"><span>⌖</span> Locais</a>
+          <a class="nav-item nav-prepared" href="#etiquetas"><span>▧</span> Etiquetas</a>
+          <div class="nav-group-label">RFID</div>
+          <a class="nav-item" href="#rfid"><span>≋</span> Painel RFID</a>
+          <a class="nav-item nav-prepared" href="#rfid-tags"><span>▣</span> Cadastro de Tags</a>
+          <a class="nav-item nav-prepared" href="#rfid-alteracao"><span>↻</span> Alteração de Tags</a>
+          <a class="nav-item nav-prepared" href="#rfid-associacao"><span>⊕</span> Associação</a>
+          <a class="nav-item" href="#inventario"><span>☑</span> Inventário RFID</a>
+          <a class="nav-item nav-prepared" href="#rfid-historico"><span>◷</span> Histórico RFID</a>
+          <div class="nav-group-label">Inventário</div>
+          <a class="nav-item nav-prepared" href="#novo-inventario"><span>＋</span> Novo inventário</a>
+          <a class="nav-item nav-prepared" href="#inventario-codigo"><span>▤</span> Inventário por código</a>
+          <a class="nav-item" href="#historico"><span>◷</span> Histórico</a>
+          <a class="nav-item nav-prepared" href="#divergencias"><span>!</span> Divergências</a>
+          <div class="nav-group-label">Sobras e rastreabilidade</div>
+          <a class="nav-item" href="#identificacao"><span>◌</span> Sobras e pontas</a>
+          <a class="nav-item nav-prepared" href="#consulta-global"><span>⌕</span> Consulta global</a>
+          <div class="nav-group-label">Relatórios e inteligência</div>
+          <a class="nav-item" href="#relatorios"><span>▥</span> Relatórios</a>
+          <a class="nav-item nav-prepared" href="#ia"><span>✦</span> Identificação por IA</a>
+          <div class="nav-group-label">Administração</div>
+          <a class="nav-item" href="#admin"><span>◈</span> Administração</a>
+          <a class="nav-item nav-prepared" href="#usuarios"><span>♙</span> Usuários</a>
+          <a class="nav-item nav-prepared" href="#logs"><span>≡</span> Logs</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="pro-card"><span class="pro-tag">PRO</span><strong>Mais precisão<br />para seu estoque</strong><p>Ative análises em lote e relatórios.</p><button>Conhecer plano</button></div>
+          <a class="nav-item muted" href="#configuracoes"><span>◌</span> Configurações</a>
+          <div class="user-row"><div class="avatar">AA</div><div><strong>Antonio Angelo</strong><small>Administrador</small></div><span>⋮</span></div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="mobile-menu" aria-label="Abrir menu" aria-expanded="false">☰</button>
+          <div class="header-left"><button class="sidebar-trigger" aria-label="Abrir menu" aria-expanded="false" title="Passe o mouse para abrir o menu"><span>▥</span></button><div class="breadcrumbs">Workspace <span>/</span> Dashboard</div></div>
+          <div class="top-actions"><label class="global-search"><span>⌕</span><input placeholder="Pesquisar no MetalScan" aria-label="Pesquisa global" /></label><button class="icon-button">?</button><button class="notification">♧<i></i></button><button class="outline-button" id="auth-button">Entrar</button><button class="outline-button" id="logout-button" hidden>Sair</button><div class="avatar small">AA</div></div>
+        </header>
+
+        <section class="content" id="inicio">
+          <div class="welcome ds-page-header"><div><p class="eyebrow">METALSCAN · VISÃO OPERACIONAL</p><h1>Dashboard</h1><p class="subtitle">Visão geral do MetalScan.</p></div><button class="primary-button ds-button ds-button-primary" data-open-count><span>＋</span> Nova contagem</button></div>
+
+          <div class="metric-grid">
+            <article class="metric-card" data-card-action="materials" tabindex="0" role="button"><div class="metric-label"><span class="metric-icon blue">◇</span><span>Total de materiais</span></div><strong>0</strong><small>Nenhum material cadastrado</small><div class="sparkline blue-line"></div></article>
+            <article class="metric-card" data-card-action="count" tabindex="0" role="button"><div class="metric-label"><span class="metric-icon orange">▣</span><span>Total de peças</span></div><strong>0</strong><small>Nenhuma peça cadastrada</small><div class="sparkline orange-line"></div></article>
+            <article class="metric-card" data-card-action="count" tabindex="0" role="button"><div class="metric-label"><span class="metric-icon green">◒</span><span>Peso total em estoque</span></div><strong>0,0 <em>t</em></strong><small>Nenhum peso calculado</small><div class="sparkline green-line"></div></article>
+            <article class="metric-card" data-card-action="rfid" tabindex="0" role="button"><div class="metric-label"><span class="metric-icon purple">◫</span><span>Tags RFID ativas</span></div><strong>0</strong><small>Aguardando cadastro</small><div class="mini-avatars empty-metric"><b>Nenhuma TAG ativa</b></div></article>
+            <article class="metric-card" data-card-action="inventory" tabindex="0" role="button"><div class="metric-label"><span class="metric-icon blue">☑</span><span>Inventários em andamento</span></div><strong>0</strong><small>Nenhum inventário aberto</small></article>
+            <article class="metric-card" data-card-action="rfid" tabindex="0" role="button"><div class="metric-label"><span class="metric-icon green">!</span><span>Divergências</span></div><strong>0</strong><small>Nenhuma divergência registrada</small></article>
+          </div>
+          <div class="operational-grid">
+            <article class="operational-card" data-card-action="rfid" tabindex="0" role="button"><div class="operational-icon">⌁</div><div><small>PAINEL RFID</small><strong>0 <em>tags ativas</em></strong><p>Nenhuma leitura registrada</p></div><span class="status-pill neutral">Sem dados</span></article>
+            <article class="operational-card" data-card-action="inventory" tabindex="0" role="button"><div class="operational-icon">✓</div><div><small>INVENTÁRIO ATUAL</small><strong>0 <em>% concluído</em></strong><p>Nenhum inventário cadastrado</p></div><span class="status-pill neutral">Sem dados</span></article>
+            <article class="operational-card" data-card-action="movements" tabindex="0" role="button"><div class="operational-icon">↔</div><div><small>MOVIMENTAÇÕES</small><strong>0 <em>hoje</em></strong><p>Nenhuma movimentação registrada</p></div><span class="status-pill neutral">Sem dados</span></article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel dashboard-panel"><div class="panel-heading"><div><h2>Estoque por local</h2><p>Resumo dos locais cadastrados</p></div><span class="panel-caption">0 locais</span></div><div class="dashboard-table"><div class="dashboard-table-head"><span>Local</span><span>Peças</span><span>Peso</span><span>Tags RFID</span></div><div class="empty-dashboard-row">Nenhum local cadastrado.</div></div></section>
+            <section class="panel dashboard-panel"><div class="panel-heading"><div><h2>Status RFID</h2><p>Acompanhamento das tags</p></div><span class="panel-caption">Em espera</span></div><div class="status-grid"><div><span>Cadastradas</span><b>0</b></div><div><span>Ativas</span><b>0</b></div><div><span>Inativas</span><b>0</b></div><div><span>Lidas</span><b>0</b></div><div><span>Faltantes</span><b>0</b></div></div></section>
+          </div>
+          <div class="dashboard-grid">
+            <section class="panel dashboard-panel"><div class="panel-heading"><div><h2>Últimas movimentações</h2><p>Entradas, saídas e transferências</p></div></div><div class="empty-dashboard-row">Nenhuma movimentação registrada.</div></section>
+            <section class="panel dashboard-panel"><div class="panel-heading"><div><h2>Alertas</h2><p>Pontos que exigem atenção</p></div></div><div class="alert-list"><div><span>!</span><p>Divergência de inventário<small>Sem ocorrências</small></p></div><div><span>⌁</span><p>Tag RFID desconhecida<small>Sem ocorrências</small></p></div><div><span>◇</span><p>Material sem localização<small>Sem ocorrências</small></p></div></div></section>
+          </div>
+
+          <section class="shortcuts-section ds-accordion" id="shortcuts-section">
+            <div class="section-heading shortcuts-heading"><div><h2>⚡ Atalhos</h2><p>Comece uma nova tarefa ou consulte seus dados.</p></div><button class="outline-button shortcut-toggle" id="toggle-shortcuts" type="button" aria-expanded="true" aria-controls="shortcut-content">Recolher <span aria-hidden="true">⌃</span></button></div>
+            <div class="shortcut-content" id="shortcut-content" aria-hidden="false">
+          <div class="feature-grid">
+            <article class="feature-card count-card" id="contagem" data-open-count><div class="feature-icon">▥</div><div><h3>Contar materiais</h3><p>Fotografe seu estoque e conte tubos e barras com IA.</p><button class="text-button">Iniciar contagem <span>→</span></button></div><div class="card-decoration">◌</div></article>
+            <article class="feature-card catalog-card" id="catalogo" data-open-catalogs tabindex="0" role="button"><div class="feature-icon">▦</div><div><h3>Catálogo de materiais</h3><p>Gerencie bitolas, normas, cores e pesos teóricos.</p><button class="text-button">Ver catálogo <span>→</span></button></div><div class="card-decoration">⌁</div></article>
+            <article class="feature-card identify-card" id="material-identificacao" data-open-material-identify><div class="feature-icon">⌕</div><div><h3>Identificar material</h3><p>Use foto, código ou pesquisa para localizar uma especificação.</p><button class="text-button">Abrir identificação <span>→</span></button></div><div class="card-decoration">◎</div></article>
+            <article class="feature-card identify-card" id="identificacao" data-open-identify><div class="feature-icon">◈</div><div><h3>Identificar pontas</h3><p>Descubra cor, norma e bitola a partir de uma foto.</p><button class="text-button">Identificar agora <span>→</span></button></div><div class="card-decoration">◎</div></article>
+          </div>
+            </div>
+          </section>
+
+          <div class="lower-grid">
+            <section class="panel chart-panel"><div class="panel-heading"><div><h2>Movimentação do estoque</h2><p>Os dados aparecerão após os primeiros cadastros</p></div><select><option>Últimos 30 dias</option><option>Últimos 7 dias</option></select></div><div class="empty-panel">Nenhuma movimentação registrada.</div></section>
+            <section class="panel activity-panel" id="historico"><div class="panel-heading"><div><h2>Atividade recente</h2><p>As ações realizadas aparecerão aqui</p></div><button class="kebab">⋮</button></div><div class="empty-panel">Nenhuma atividade registrada.</div><button class="outline-button" disabled>Ver todo o histórico</button></section>
+          </div>
+        </section>
+        <section class="modal stock-modal" id="stock-modal" aria-labelledby="stock-title" hidden>
+          <button class="close-modal" data-close-modal>×</button>
+          <div class="modal-header"><span class="modal-step green-step">OPERAÇÃO</span><h2 id="stock-title">Estoque</h2><p>Controle saldos, rastreabilidade e movimentações por local.</p></div>
+          <div class="stock-summary"><div><span>Total de itens</span><b id="stock-total-items">0</b></div><div><span>Quantidade total</span><b id="stock-total-quantity">0</b></div><div><span>Valor do estoque</span><b id="stock-total-value">R$ 0,00</b></div><div><span>Sem movimentação</span><b id="stock-no-movement">0</b></div><div><span>Sem localização</span><b id="stock-no-location">0</b></div><div><span>Divergências</span><b id="stock-divergences">0</b></div></div>
+          <div class="stock-toolbar"><input id="stock-search" placeholder="Pesquisar código, descrição, LAIS, corrida, lote, fornecedor, fabricante, local, norma ou material" /><input id="stock-code-lookup" placeholder="Ler/informar código, QR ou LAIS" /><button class="outline-button" id="stock-code-search">Consultar código</button><button class="outline-button" id="stock-import">↑ Importar planilha</button><button class="outline-button" id="stock-locations-button">⌖ Locais</button><button class="primary-button" id="stock-new-entry">＋ Nova entrada</button></div>
+          <div class="stock-filters"><select id="stock-filter-location"><option value="">Todos os locais</option></select><input id="stock-filter-material" placeholder="Material" /><input id="stock-filter-standard" placeholder="Norma" /><select id="stock-filter-status"><option value="">Todos os status</option><option value="normal">Normal</option><option value="attention">Atenção</option><option value="divergence">Divergência</option></select><button class="outline-button" id="stock-clear-filters">Limpar filtros</button></div>
+          <p class="ai-status" id="stock-status"></p>
+          <div class="stock-table-wrap"><table id="stock-table"><thead><tr><th>ID</th><th>LAIS</th><th>Código</th><th>Descrição</th><th>Tipo</th><th>Material</th><th>Bitola/diâmetro</th><th>Espessura</th><th>Norma</th><th>Corrida</th><th>Lote</th><th>Fabricante</th><th>Fornecedor</th><th>Quantidade</th><th>Unidade</th><th>Comprimento</th><th>Peso</th><th>Custo unit.</th><th>Custo total</th><th>Giro</th><th>Local</th><th>Status</th><th>Entrada</th><th>Última movimentação</th><th>Ações</th></tr></thead><tbody></tbody></table></div>
+          <div class="stock-movement-panel"><div class="registration-list-heading"><strong>Histórico de movimentações</strong><span>Entradas, saídas e transferências desta empresa</span></div><div class="stock-history-wrap"><table id="stock-history-table"><thead><tr><th>Data/hora</th><th>Usuário</th><th>Material</th><th>Tipo</th><th>Quantidade</th><th>Local</th><th>Observação</th></tr></thead><tbody></tbody></table></div></div>
+          <div class="stock-locations-panel" id="stock-locations-panel" hidden><div class="registration-list-heading"><strong>Locais de estoque</strong><span>Cadastre os locais antes de registrar entradas.</span></div><div class="stock-location-form"><input id="stock-location-name" placeholder="Ex.: NAVE 01" /><input id="stock-location-description" placeholder="Descrição opcional" /><button class="primary-button" id="stock-save-location">Salvar local</button></div><div id="stock-locations-list"></div></div>
+          <div class="stock-form-panel" id="stock-form-panel" hidden><div class="registration-title"><div><small id="stock-form-kicker">ENTRADA DE MATERIAL</small><strong id="stock-form-title">Nova entrada</strong></div><span>O material deve existir no catálogo.</span></div><div class="registration-grid"><label>Material do catálogo *<select id="stock-material-field"></select></label><label>LAIS<input id="stock-lais-field" /></label><label>Corrida<input id="stock-heat-field" /></label><label>Lote<input id="stock-lot-field" /></label><label>Fornecedor<input id="stock-supplier-field" /></label><label>Quantidade *<input id="stock-quantity-field" type="number" min="0.001" step="0.001" /></label><label>Unidade<input id="stock-unit-field" /></label><label>Comprimento<input id="stock-length-field" type="number" min="0" step="0.001" /></label><label>Custo unitário<input id="stock-unit-cost-field" type="number" min="0" step="0.01" /></label><label>Peso movimentado (kg)<input id="stock-weight-field" type="number" min="0" step="0.001" /></label><label>Local *<select id="stock-location-field"></select></label><label>Destino/motivo<input id="stock-reason-field" /></label><label>Observação<textarea id="stock-note-field"></textarea></label></div><p class="ai-status" id="stock-form-status"></p><div class="modal-actions"><button class="outline-button" id="stock-cancel-form">Cancelar</button><button class="primary-button" id="stock-submit-form">Registrar entrada</button></div></div>
+        </section>
+        <footer class="app-footer">MetalScan © 2026 <span>·</span> Inteligência para seu estoque de aço <span>·</span> Desenvolvido para Antonio Carlos Angelo Martello <span>·</span> <a href="#suporte">Suporte</a></footer>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="modal-backdrop" hidden>
+      <section class="modal auth-modal" id="auth-modal" aria-labelledby="auth-title" hidden>
+        <button class="close-modal" data-close-modal>×</button><div class="modal-header"><span class="modal-step">WORKSPACE</span><h2 id="auth-title">Entrar no MetalScan</h2><p>Acesse os cadastros da sua empresa com segurança.</p></div>
+        <label class="auth-label">E-mail<input id="auth-email" type="email" placeholder="voce@empresa.com" /></label>
+        <label class="auth-label">Senha<input id="auth-password" type="password" placeholder="Sua senha" /></label>
+        <p class="auth-status" id="auth-status"></p><button class="primary-button full" id="auth-submit">Entrar</button>
+      </section>
+      <section class="modal auth-modal" id="admin-modal" aria-labelledby="admin-title" hidden>
+        <button class="close-modal" data-close-modal>×</button><div class="modal-header"><span class="modal-step">ACESSO RESTRITO</span><h2 id="admin-title">Administração</h2><p>Entre com uma conta autorizada para gerenciar cadastros, usuários e status.</p></div>
+        <label class="auth-label">E-mail administrativo<input id="admin-email" type="email" placeholder="admin@empresa.com" /></label>
+        <label class="auth-label">Senha<input id="admin-password" type="password" placeholder="Sua senha" /></label>
+        <p class="auth-status" id="admin-status"></p><button class="primary-button full" id="admin-submit">Acessar administração</button>
+      </section>
+      <section class="modal" id="count-modal" aria-labelledby="count-title">
+        <button class="close-modal" data-close-modal>×</button><div class="modal-header"><span class="modal-step">01 / 02</span><h2 id="count-title">Contar materiais</h2><p>Envie uma foto do estoque para começar a análise.</p></div>
+        <div class="dropzone" id="count-drop"><div class="upload-symbol">↑</div><strong>Arraste uma foto ou clique para enviar</strong><span>JPG, PNG ou HEIC · até 20 MB</span><input type="file" id="count-file" accept="image/*" /><img id="count-preview" alt="Prévia da foto" hidden /></div>
+        <div class="form-row"><label>Empresa<select id="company-select"><option value="acotubo" data-color="#3566e8">Grupo Açotubo</option><option value="metalforte" data-color="#e7773f">Metalforte</option><option value="ferrovale" data-color="#7659e8">Ferrovale</option></select></label><label>Tipo de material<select id="material-type"><option value="round_tube">Tubo redondo</option><option value="round_bar">Barra redonda</option><option value="square_tube">Tubo quadrado</option></select></label><label>Aço<select id="steel-type"><option value="carbon">Aço carbono</option><option value="stainless">Aço inox</option></select></label></div>
+        <div class="form-row"><label>Parede (mm)<input id="material-wall" type="number" value="2.65" min="0" step="0.01" /></label><label>Diâmetro / lado (mm)<input id="material-diameter" type="number" value="50.8" min="0.1" step="0.01" /></label><label>Norma<input id="material-standard" placeholder="Ex.: ASTM A500" /></label></div>
+        <div class="form-row"><label>Quantidade identificada<input id="material-quantity" type="number" value="1" min="1" step="1" /></label><label>Comprimento padrão (m)<input id="standard-length" type="number" value="6" min="0.1" step="0.1" /></label></div>
+        <div class="company-marker"><i id="company-color"></i><span>Cor do topo cadastrada para <strong id="company-name">Grupo Açotubo</strong></span></div>
+        <p class="ai-status" id="ai-status" role="status"></p><div class="modal-actions"><button class="outline-button" data-close-modal>Cancelar</button><button class="primary-button" id="analyze-count">Analisar foto <span>→</span></button></div>
+        <div class="analysis-result" id="count-result" hidden><div class="result-number"><small>RESULTADO CALCULADO</small><strong id="count-number">1 <em>un.</em></strong><span id="count-weight">Peso teórico: 0 kg</span></div><div class="result-details"><span>Perfil <b id="result-profile">—</b></span><span>Comprimento <b id="result-length">6 m</b></span><span>Norma <b id="result-standard">—</b></span></div><button class="primary-button full" id="save-count">Salvar contagem</button></div>
+        <div class="data-table-block"><div class="registration-list-heading"><strong>Contagens registradas</strong><button class="outline-button" id="export-counts">Exportar CSV</button></div><div class="data-table-scroll"><table id="count-table"><thead><tr><th>Data</th><th>Empresa</th><th>Material</th><th>Quantidade</th><th>Peso teórico</th></tr></thead><tbody><tr><td colspan="5">Nenhuma contagem registrada.</td></tr></tbody></table></div></div>
+      </section>
+      <section class="modal material-identify-modal" id="material-identify-modal" aria-labelledby="material-identify-title" hidden>
+        <button class="close-modal" data-close-modal>×</button>
+        <div class="modal-header"><span class="modal-step">IDENTIFICAÇÃO</span><h2 id="material-identify-title">Identificar Material</h2><p>Identifique um material utilizando imagem, código ou pesquisa.</p></div>
+        <div class="identify-methods"><button class="identify-method" id="open-material-camera"><span>◉</span><strong>Tirar foto</strong><small>Usar câmera</small></button><button class="identify-method" id="choose-material-image"><span>▧</span><strong>Enviar imagem</strong><small>JPG, PNG ou WEBP</small></button><button class="identify-method" id="read-material-code"><span>▥</span><strong>Ler código</strong><small>Preparado para leitor</small></button><button class="identify-method" id="manual-material-search"><span>⌕</span><strong>Pesquisar</strong><small>Buscar no catálogo</small></button></div>
+        <div class="material-identify-grid">
+          <div>
+            <div class="material-capture-area" id="material-capture-area"><div class="capture-placeholder"><span>⌾</span><strong>Adicione uma foto ou abra a câmera</strong><small>A análise por IA será conectada posteriormente.</small></div><video id="material-camera" autoplay playsinline hidden></video><img id="material-image-preview" alt="Prévia do material" hidden /><canvas id="material-camera-canvas" hidden></canvas></div>
+            <input type="file" id="material-image-file" accept="image/jpeg,image/png,image/webp" hidden />
+            <div class="camera-actions"><button class="outline-button" id="capture-material-photo" hidden>Capturar</button><button class="outline-button" id="retake-material-photo" hidden>Refazer</button><button class="outline-button" id="remove-material-image" hidden>Remover imagem</button><button class="primary-button" id="confirm-material-image" hidden>Confirmar análise</button></div>
+            <p class="ai-status" id="material-identify-status">Análise por IA ainda não configurada.</p>
+          </div>
+          <div class="material-result-panel"><div class="material-search-form"><label>Pesquisa manual<input id="material-search-input" placeholder="Código, descrição, diâmetro, bitola ou norma" /></label><button class="outline-button" id="material-search-submit">Pesquisar</button></div><div id="material-identify-result" class="material-empty-result"><span>⌕</span><strong>Aguardando identificação</strong><p>Selecione uma imagem, leia um código ou pesquise manualmente.</p></div><div id="material-identify-details" hidden><div class="material-result-heading"><div><small>CARACTERÍSTICAS IDENTIFICADAS</small><strong id="material-result-description">—</strong></div><span id="material-result-confidence" class="confidence">—</span></div><div class="material-detail-grid"><span>Código<b id="material-result-code">—</b></span><span>Tipo<b id="material-result-type">—</b></span><span>Material<b id="material-result-steel">—</b></span><span>Formato<b id="material-result-format">—</b></span><span>Diâmetro<b id="material-result-diameter">—</b></span><span>Bitola<b id="material-result-bitola">—</b></span><span>Espessura<b id="material-result-wall">—</b></span><span>Norma<b id="material-result-standard">—</b></span><span>Cor/acabamento<b id="material-result-color">—</b></span><span>Fabricante<b id="material-result-manufacturer">—</b></span><span>Peso teórico<b id="material-result-weight">—</b></span><span>Unidade<b id="material-result-unit">—</b></span></div><div class="material-identification-form"><strong>Confirme e complete os dados</strong><div class="registration-grid"><label>Material<input id="identified-material-field" /></label><label>Tipo<input id="identified-type-field" /></label><label>Diâmetro (mm)<input id="identified-diameter-field" type="number" min="0" step="0.01" /></label><label>Espessura/parede (mm)<input id="identified-wall-field" type="number" min="0" step="0.01" /></label><label>Cor/acabamento<input id="identified-color-field" /></label><label>Norma<input id="identified-standard-field" /></label><label>Fabricante provável<input id="identified-manufacturer-field" /></label><label>Código provável<input id="identified-code-field" /></label><label>Comprimento (m) *<input id="identified-length-field" type="number" min="0.01" step="0.01" placeholder="Informe manualmente" /></label><label>Quantidade *<input id="identified-quantity-field" type="number" min="1" step="1" value="1" /></label></div><small class="material-identification-note">Diâmetro, espessura e demais características podem exigir confirmação. O comprimento nunca é medido pela foto: informe manualmente.</small></div><div class="material-result-actions"><button class="outline-button" id="edit-material-result">Editar informações</button><button class="primary-button" id="confirm-material-result">Confirmar material</button></div><div class="material-confirmed-result" id="material-confirmed-result" hidden><strong>Resultado estimado</strong><div class="material-detail-grid"><span>Peso por metro<b id="identified-weight-meter">—</b></span><span>Comprimento informado<b id="identified-length-result">—</b></span><span>Quantidade<b id="identified-quantity-result">—</b></span><span>Peso por peça<b id="identified-weight-piece">—</b></span><span>Peso total<b id="identified-weight-total">—</b></span><span>Comprimento total<b id="identified-total-length">—</b></span></div><div class="material-result-actions"><button class="outline-button" id="consult-material-catalog">Consultar Catálogo</button><button class="outline-button" id="add-material-stock">Adicionar ao Estoque</button><button class="outline-button" id="register-material-scrap">Registrar como Sobra</button></div></div></div></div>
+        </div>
+      </section>
+      <section class="modal" id="identify-modal" aria-labelledby="identify-title" hidden>
+        <button class="close-modal" data-close-modal>×</button><div class="modal-header"><span class="modal-step purple-step">ANÁLISE VISUAL</span><h2 id="identify-title">Identificar ponta</h2><p>Fotografe a ponta do material para identificar sua especificação.</p></div>
+        <div class="dropzone purple-zone" id="identify-drop"><div class="upload-symbol">◈</div><strong>Envie uma foto da ponta</strong><span>Enquadre a marcação e a cor do material</span><input type="file" id="identify-file" accept="image/*" /><img id="identify-preview" alt="Prévia da ponta" hidden /></div>
+        <p class="ai-status" id="identify-status" role="status"></p><button class="primary-button full" id="analyze-identify">Analisar ponta</button>
+        <div class="identification-result"><div class="material-preview"><div class="steel-icon">◉</div><div><small>IDENTIFICAÇÃO SUGERIDA</small><strong id="identified-description">Aguardando análise</strong></div><span class="confidence" id="identify-confidence">—</span></div></div>
+        <div class="registration-form">
+          <div class="registration-title"><div><small>CADASTRO DA PONTA</small><strong>Novo material</strong></div><span id="next-tip-id">ID automático · PT-0001</span></div>
+          <div class="registration-grid">
+            <label>Código <input id="tip-code" placeholder="Ex.: TB-AC-002" /></label>
+            <label>Descrição <input id="tip-description" value="Tubo estrutural quadrado" /></label>
+            <label>Unidade <select id="tip-unit"><option>un.</option><option>kg</option><option>m</option><option>barra</option></select></label>
+            <label>Diâmetro (mm) <input id="tip-diameter" type="number" step="0.01" placeholder="50,80" /></label>
+            <label>Comprimento (m) <input id="tip-length" type="number" step="0.01" value="6" /></label>
+            <label>Quantidade <input id="tip-quantity" type="number" min="0" step="1" value="1" /></label>
+            <label>Quantidade em kg <input id="tip-weight" type="number" min="0" step="0.01" placeholder="0,00" /></label>
+            <label>Status <select id="tip-status"><option value="active">Ativo</option><option value="inactive">Inativo</option></select></label>
+          </div>
+        </div>
+        <div class="registration-list"><div class="registration-list-heading"><strong>Pontas cadastradas</strong><span id="tip-total">0 registros</span></div><div id="tip-list"><p class="empty-list">Nenhuma ponta cadastrada nesta sessão.</p></div></div>
+        <div class="modal-actions"><button class="outline-button" data-close-modal>Cancelar</button><button class="primary-button" id="add-identified">Cadastrar ponta <span>→</span></button></div>
+        <div class="data-table-block"><div class="registration-list-heading"><strong>Exportação e etiqueta</strong><div><button class="outline-button" id="export-tips">Exportar CSV</button><button class="outline-button" id="print-tip-label">Imprimir etiqueta</button></div></div></div>
+      </section>
+      <section class="modal catalog-modal" id="catalog-modal" aria-labelledby="catalog-title" hidden>
+        <button class="close-modal" data-close-modal>×</button><div class="modal-header"><span class="modal-step green-step">CATÁLOGO</span><h2 id="catalog-title">Catálogo de materiais</h2><p>Consulte e importe as especificações do seu estoque.</p></div>
+        <div class="catalog-toolbar"><select id="catalog-company"><option value="acotubo">Grupo Açotubo · 347 materiais</option><option value="metalforte">Metalforte · 128 materiais</option><option value="ferrovale">Ferrovale · 86 materiais</option></select><input id="catalog-search" placeholder="⌕  Buscar material..." /><label class="outline-button import-button">↑ Importar tabela<input id="catalog-file" type="file" accept=".csv,.xlsx,.xls" /></label></div><p class="catalog-status" id="catalog-status">Tabela ativa: Grupo Açotubo · selecione outra empresa para consultar seu catálogo.</p><div class="catalog-table"><div class="table-head"><span>Material</span><span>Norma</span><span>Bitola</span><span>kg/m</span></div><div><span><b class="table-dot blue"></b>Tubo redondo</span><span>ABNT NBR 5580</span><span>2" x 2,65 mm</span><strong>3,56</strong></div><div><span><b class="table-dot orange"></b>Barra redonda</span><span>SAE 1020</span><span>Ø 1/2"</span><strong>0,994</strong></div><div><span><b class="table-dot purple"></b>Tubo quadrado</span><span>ASTM A500</span><span>2" x 2"</span><strong>3,18</strong></div></div><button class="primary-button full" data-close-modal>Fechar catálogo</button>
+      </section>
+      <section class="modal catalogs-manager-modal" id="catalogs-manager-modal" aria-labelledby="catalogs-manager-title" hidden>
+        <button class="close-modal" data-close-modal>×</button>
+        <div class="modal-header"><span class="modal-step green-step">GESTÃO DE CATÁLOGOS</span><h2 id="catalogs-manager-title">Catálogos</h2><p>Gerencie catálogos, fabricantes e tabelas de materiais.</p></div>
+        <div class="catalogs-summary"><div><span>Total de catálogos</span><b id="catalogs-total">0</b></div><div><span>Catálogos ativos</span><b id="catalogs-active">0</b></div><div><span>Empresas cadastradas</span><b id="catalogs-companies">0</b></div><div><span>Materiais disponíveis</span><b id="catalogs-materials">0</b></div><div><span>Última importação</span><b id="catalogs-last-import">—</b></div></div>
+        <div class="catalogs-actions"><div class="catalogs-actions-copy"><strong>Base de catálogos</strong><span>Pesquise, importe e mantenha as fontes dos materiais organizadas.</span></div><div class="catalogs-actions-buttons"><button class="outline-button" id="open-catalog-import">↑ Importar dados</button><button class="primary-button" id="new-catalog">＋ Novo Catálogo</button></div></div>
+        <div class="catalog-intelligence-entry"><div><span class="catalog-feature-label">INTELIGÊNCIA DE MATERIAIS</span><strong>Encontre especificações em fontes externas</strong><p>Compare resultados, preserve a fonte e revise antes de salvar no cadastro mestre.</p></div><button class="primary-button" id="open-material-intelligence">Pesquisar na Internet <span>→</span></button></div>
+        <div class="catalog-partners-panel"><div class="catalogs-filter-title"><strong>Fabricantes e fornecedores</strong><span>Cadastros relacionados aos materiais do catálogo.</span></div><div class="catalog-partner-actions"><button class="outline-button" id="toggle-manufacturers">Fabricantes</button><button class="outline-button" id="toggle-suppliers">Fornecedores</button></div><div id="catalog-partners-content" hidden><div class="catalog-partner-form"><select id="partner-type"><option value="fabricante">Fabricante</option><option value="fornecedor">Fornecedor</option></select><input id="partner-name" placeholder="Nome *" /><input id="partner-cnpj" placeholder="CNPJ" /><input id="partner-country" placeholder="País" /><input id="partner-city" placeholder="Cidade" /><input id="partner-state" placeholder="Estado" /><input id="partner-site" placeholder="Site" /><input id="partner-contact" placeholder="Contato" /><button class="primary-button" id="save-partner">Salvar cadastro</button></div><div id="catalog-partners-list" class="catalog-partners-list"></div></div></div>
+        <div class="catalogs-filter-panel"><div class="catalogs-filter-title"><strong>Catálogos cadastrados</strong><button class="outline-button" id="clear-catalog-filters">Limpar filtros</button></div><div class="materials-toolbar catalogs-toolbar"><input id="catalogs-search" placeholder="Pesquisar empresa, catálogo, fabricante ou código" /><select id="catalogs-filter-company"><option value="">Todas as empresas</option></select><select id="catalogs-filter-type"><option value="">Todos os tipos</option><option>Fornecedor</option><option>Fabricante</option><option>Cliente</option><option>Interno</option></select><select id="catalogs-filter-status"><option value="">Todos os status</option><option value="active">Ativo</option><option value="inactive">Inativo</option></select></div></div>
+        <p class="ai-status" id="catalogs-status"></p>
+        <div class="materials-table-wrap catalogs-table-wrap"><table id="catalogs-table"><thead><tr><th>Empresa</th><th>Catálogo</th><th>Tipo</th><th>Versão</th><th>Materiais</th><th>Atualização</th><th>Status</th><th>Ações</th></tr></thead><tbody></tbody></table></div>
+        <div class="catalog-form-panel" id="catalog-form-panel" hidden><div class="registration-title"><div><small>CADASTRO DE CATÁLOGO</small><strong id="catalog-form-title">Novo catálogo</strong></div><span>Campos com * são obrigatórios</span></div><div class="registration-grid"><label>Empresa *<input id="catalog-company-field" required /></label><label>CNPJ<input id="catalog-cnpj-field" /></label><label>Fabricante/Fornecedor<input id="catalog-maker-field" /></label><label>Contato<input id="catalog-contact-field" /></label><label>Nome do catálogo *<input id="catalog-name-field" required /></label><label>Código/identificador<input id="catalog-code-field" /></label><label>Tipo<select id="catalog-type-field"><option>Fornecedor</option><option>Fabricante</option><option>Cliente</option><option>Interno</option></select></label><label>Versão<input id="catalog-version-field" /></label><label>Data do catálogo<input id="catalog-date-field" type="date" /></label><label>Data da atualização<input id="catalog-update-field" type="date" /></label><label>Status<select id="catalog-status-field"><option value="active">Ativo</option><option value="inactive">Inativo</option></select></label></div><label class="catalog-upload-zone" id="catalog-upload-zone">↑ Selecione ou arraste o arquivo do catálogo<input id="catalog-upload-file" type="file" accept=".csv,.xlsx,.xls,.pdf" /><small id="catalog-file-info">Formatos aceitos: CSV, XLSX, XLS e PDF.</small></label><div class="catalog-preview" id="catalog-preview" hidden><strong>Pré-visualização do arquivo</strong><span id="catalog-preview-meta"></span><div id="catalog-preview-table"></div><div class="catalog-mapping"><label>Código <select id="map-code"><option value="">Não mapear</option><option value="codigo">Código</option></select></label><label>Descrição <select id="map-description"><option value="">Não mapear</option><option value="descricao">Descrição</option></select></label><label>Bitola <select id="map-bitola"><option value="">Não mapear</option><option value="bitola">Bitola</option></select></label><label>Peso KG/M <select id="map-weight"><option value="">Não mapear</option><option value="pesoTeoricoMetro">Peso teórico por metro</option></select></label></div></div><div class="modal-actions"><button class="outline-button" id="cancel-catalog-form">Cancelar</button><button class="primary-button" id="save-catalog">Salvar catálogo</button></div></div>
+        <div class="catalog-history"><div class="registration-list-heading"><strong>Histórico de importações</strong><span>Processamentos realizados neste dispositivo</span></div><div class="catalog-history-list" id="catalog-history-list"><p class="empty-list">Nenhuma importação registrada.</p></div></div>
+      </section>
+      <section class="modal material-intelligence-modal" id="material-intelligence-modal" aria-labelledby="material-intelligence-title" hidden>
+        <button class="close-modal" data-close-modal>×</button>
+        <div class="modal-header"><span class="modal-step green-step">INTELIGÊNCIA</span><h2 id="material-intelligence-title">Inteligência de Materiais</h2><p>Pesquise informações externas e escolha o material que deseja revisar.</p></div>
+        <form id="material-intelligence-form" class="intelligence-search-form">
+          <label>Descrição do material<input name="descricao" placeholder="Ex.: tubo aço carbono 50,8 x 2 mm" /></label><label>Código<input name="codigo" /></label><label>Material<input name="material" /></label><label>Tipo de produto<input name="tipo" /></label><label>Bitola/diâmetro<input name="bitola" /></label><label>Espessura<input name="espessura" /></label><label>Norma<input name="norma" /></label><label>Fabricante<input name="fabricante" /></label><label>Fornecedor<input name="fornecedor" /></label>
+          <button class="primary-button full" type="submit">Pesquisar na Internet</button>
+        </form>
+        <p class="ai-status" id="material-intelligence-status">Nenhuma pesquisa executada.</p>
+        <div class="intelligence-results-head"><strong>Resultados encontrados</strong><span id="material-intelligence-selection">0 selecionados</span></div>
+        <div id="material-intelligence-results" class="intelligence-results"><p class="empty-list">A pesquisa depende de um provedor web configurado no backend.</p></div>
+        <div class="intelligence-compare" id="material-intelligence-compare" hidden><div class="registration-list-heading"><strong>Comparação</strong><span>Resultados selecionados</span></div><div id="material-intelligence-compare-table"></div></div>
+      </section>
+      <section class="modal material-intelligence-review-modal" id="material-intelligence-review-modal" aria-labelledby="material-intelligence-review-title" hidden>
+        <button class="close-modal" data-close-modal>×</button>
+        <div class="modal-header"><span class="modal-step green-step">REVISÃO</span><h2 id="material-intelligence-review-title">Revisar material</h2><p>Confirme e ajuste os dados antes de salvar no cadastro mestre.</p></div>
+        <form id="material-intelligence-review-form" class="registration-grid"></form>
+        <div class="source-reference" id="material-intelligence-source"></div>
+        <div class="modal-actions"><button class="outline-button" data-close-modal>Voltar</button><button class="primary-button" id="save-intelligent-material">Salvar no Catálogo</button></div>
+      </section>
+      <section class="modal imports-manager-modal" id="imports-manager-modal" aria-labelledby="imports-title" hidden>
+        <button class="close-modal" data-close-modal>×</button>
+        <div class="modal-header"><span class="modal-step green-step">DADOS</span><h2 id="imports-title">Importação de Dados</h2><p>Importe, valide e acompanhe dados do MetalScan com segurança.</p></div>
+        <div class="imports-summary"><div><span>Importações realizadas</span><b id="imports-total">0</b></div><div><span>Importações concluídas</span><b id="imports-completed">0</b></div><div><span>Importações com erro</span><b id="imports-errors">0</b></div><div><span>Registros importados</span><b id="imports-records">0</b></div><div><span>Última importação</span><b id="imports-last">—</b></div></div>
+        <div class="import-step-panel">
+          <div class="import-toolbar"><label>Tipo de importação<select id="import-type"><option value="materials">Materiais</option><option value="catalogs">Catálogos</option><option value="stock">Estoque</option></select></label><span id="import-type-help">Importe dados para o cadastro mestre de materiais.</span></div>
+          <div class="import-template-guide"><div><strong>Formato recomendado da tabela</strong><p>Use a primeira linha para os nomes das colunas. O sistema analisará todas as colunas do arquivo e permitirá ignorar ou mapear cada uma.</p></div><div id="import-template-columns" class="import-template-columns"></div><button class="outline-button" id="download-import-template" type="button">Baixar modelo CSV</button></div>
+          <label class="import-dropzone" id="import-dropzone">↑ Arraste o arquivo aqui ou selecione um arquivo<input id="import-file" type="file" accept=".csv,.xlsx,.xls" /><small id="import-file-info">Formatos aceitos: CSV, XLSX e XLS.</small></label>
+          <div class="import-workflow" id="import-workflow" hidden>
+            <div class="import-section-title"><strong>Mapeamento de Colunas</strong><span>Revise as associações antes da validação.</span></div>
+            <div class="import-mapping" id="import-mapping"></div>
+            <div class="import-section-title"><strong>Prévia e validação</strong><span id="import-preview-meta">—</span></div>
+            <div class="import-validation-summary"><span>Registros analisados <b id="import-analyzed">0</b></span><span class="valid">Válidos <b id="import-valid">0</b></span><span class="attention">Atenção <b id="import-attention">0</b></span><span class="invalid">Erros <b id="import-invalid">0</b></span><span>Novos <b id="import-new">0</b></span><span>Atualizações <b id="import-updates">0</b></span></div>
+            <label class="import-duplicate-policy">Código já cadastrado<select id="import-duplicate-policy"><option value="ignore">Ignorar registro existente</option><option value="update">Atualizar cadastro existente</option></select></label>
+            <div class="import-preview-table-wrap"><table id="import-preview-table"><thead></thead><tbody></tbody></table></div>
+            <p class="ai-status" id="import-status"></p>
+            <div class="import-progress" id="import-progress" hidden><div><span>Importando dados...</span><b id="import-progress-label">0%</b></div><progress id="import-progress-bar" max="100" value="0"></progress></div>
+            <div class="modal-actions"><button class="outline-button" id="clear-import">Remover arquivo</button><button class="primary-button" id="confirm-import" disabled>Confirmar Importação</button></div>
+          </div>
+        </div>
+        <div class="catalog-history import-history"><div class="registration-list-heading"><strong>Histórico de Importações</strong><span>Operações realizadas neste dispositivo</span></div><div class="import-history-list" id="import-history-list"><p class="empty-list">Nenhuma importação registrada.</p></div></div>
+      </section>
+      <section class="modal materials-modal" id="materials-modal" aria-labelledby="materials-title" hidden>
+        <button class="close-modal" data-close-modal>×</button>
+        <div class="modal-header"><span class="modal-step">CADASTRO MESTRE</span><h2 id="materials-title">Materiais</h2><p>Cadastro e gerenciamento dos materiais do MetalScan.</p></div>
+        <div class="materials-summary"><div><span>Total de materiais</span><b id="materials-total">0</b></div><div><span>Materiais ativos</span><b id="materials-active">0</b></div><div><span>Materiais inativos</span><b id="materials-inactive">0</b></div><div><span>Tipos cadastrados</span><b id="materials-types">0</b></div><div><span>Cadastrados recentemente</span><b id="materials-recent">0</b></div></div>
+        <div class="materials-toolbar"><input id="materials-search" placeholder="Pesquisar por código, descrição, material, tipo, bitola, diâmetro ou norma" /><select id="materials-sort" aria-label="Ordenar materiais"><option value="updated">Mais recentes</option><option value="code">Código</option><option value="description">Descrição</option><option value="manufacturer">Fabricante</option><option value="status">Status</option></select><button class="outline-button" id="clear-material-filters">Limpar filtros</button><button class="outline-button" id="export-materials">Exportar CSV</button><button class="outline-button" id="import-materials">↑ Importar tabela</button><button class="primary-button" id="new-material">＋ Novo Material</button></div>
+        <div class="materials-import-guide"><div><strong>Importação de materiais</strong><p>Use uma tabela CSV, XLSX ou XLS. A primeira linha deve conter os nomes das colunas; todas as colunas serão exibidas para mapeamento antes da validação.</p></div><div class="materials-import-columns"><span class="required">Código *</span><span class="required">Descrição *</span><span class="required">Material *</span><span class="required">Tipo *</span><span>Bitola</span><span>Diâmetro</span><span>Espessura</span><span>Norma</span><span>Comprimento padrão</span><span>Peso teórico por metro</span><span>Unidade</span></div><button class="outline-button" id="download-materials-template" type="button">Baixar modelo</button></div>
+        <div class="materials-filters"><select id="filter-material-type"><option value="">Todos os tipos</option><option>Tubo</option><option>Barra</option><option>Chapa</option><option>Perfil</option><option>Sobra</option><option>Ponta</option><option>Outro</option></select><select id="filter-material-steel"><option value="">Todos os materiais</option><option>Aço carbono</option><option>Aço inox</option><option>Alumínio</option><option>Outro</option></select><input id="filter-material-standard" placeholder="Norma" /><input id="filter-material-bitola" placeholder="Bitola" /><select id="filter-material-status"><option value="">Todos os status</option><option value="active">Ativo</option><option value="inactive">Inativo</option></select><select id="filter-material-unit"><option value="">Todas as unidades</option><option>un.</option><option>kg</option><option>m</option><option>barra</option><option>peça</option></select></div>
+        <p class="ai-status" id="materials-status"></p>
+        <div class="materials-collapsible-section">
+          <div class="materials-section-heading"><div><small>CONSULTA</small><strong>Materiais cadastrados</strong><span>Expanda para pesquisar e acessar os registros.</span></div><button class="outline-button materials-section-toggle" id="toggle-materials-table" type="button" aria-expanded="false" aria-controls="materials-table-panel">Mostrar tabela <span aria-hidden="true">⌄</span></button></div>
+          <div class="materials-table-wrap" id="materials-table-panel" hidden><table id="materials-table"><thead><tr><th>ID</th><th>Código</th><th>Descrição</th><th>Tipo</th><th>Material</th><th>Diâmetro/bitola</th><th>Espessura</th><th>Largura</th><th>Altura</th><th>Comprimento</th><th>Norma</th><th>Peso teórico</th><th>Unidade</th><th>Fabricante</th><th>Fornecedor</th><th>Status</th><th>Fonte</th><th>Atualização</th><th>Ações</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="materials-collapsible-section">
+          <div class="materials-section-heading"><div><small>CADASTRO MANUAL</small><strong>Novo material</strong><span>Cadastre um material preenchendo o formulário manualmente.</span></div><button class="primary-button" id="toggle-material-form" type="button" aria-expanded="false" aria-controls="material-form-panel">Cadastrar manualmente <span aria-hidden="true">＋</span></button></div>
+        </div>
+        <div class="material-form-panel" id="material-form-panel" hidden><div class="registration-title"><div><small>CADASTRO DE MATERIAL</small><strong id="material-form-title">Novo material</strong></div><span>Campos com * são obrigatórios</span></div><div class="material-form-intro"><strong>Identificação e especificação</strong><span>Preencha primeiro os campos obrigatórios. Os demais dados podem ser complementados depois.</span></div><div class="registration-grid"><label>Código *<input id="material-code" required /></label><label>Descrição *<input id="material-description" required /></label><label>Tipo *<input id="material-type-field" list="material-types-list" required /><datalist id="material-types-list"><option value="Tubo"/><option value="Barra"/><option value="Chapa"/><option value="Perfil"/><option value="Sobra"/><option value="Ponta"/><option value="Outro"/></datalist></label><label>Material *<input id="material-steel-field" list="material-steels-list" required /><datalist id="material-steels-list"><option value="Aço carbono"/><option value="Aço inox"/><option value="Alumínio"/><option value="Outro"/></datalist></label><label>Norma<input id="material-standard-field" /></label><label>Bitola<input id="material-bitola-field" /></label><label>Diâmetro (mm)<input id="material-diameter-field" type="number" min="0" step="0.01" /></label><label>Espessura (mm)<input id="material-wall-field" type="number" min="0" step="0.01" /></label><label>Largura (mm)<input id="material-width-field" type="number" min="0" step="0.01" /></label><label>Altura (mm)<input id="material-height-field" type="number" min="0" step="0.01" /></label><label>Comprimento padrão (m)<input id="material-length-field" type="number" min="0" step="0.01" /></label><label>Cor/acabamento<input id="material-color-field" /></label><label>Peso teórico/m (kg)<input id="material-weight-meter-field" type="number" min="0" step="0.001" /></label><label>Peso teórico/peça (kg)<input id="material-weight-piece-field" type="number" min="0" step="0.001" /></label><label>Unidade de peso<select id="material-unit-field"><option>un.</option><option>kg</option><option>m</option><option>barra</option><option>peça</option></select></label><label>Fabricante<input id="material-maker-field" /></label><label>Fornecedor<input id="material-supplier-field" /></label><label>Fonte<input id="material-source-field" /></label><label>Status<select id="material-status-field"><option value="active">Ativo</option><option value="inactive">Inativo</option></select></label><label>Observações<textarea id="material-notes-field"></textarea></label><label>Código de barras<input id="material-barcode-field" /></label><label>QR Code<input id="material-qr-field" /></label></div><div class="modal-actions"><button class="outline-button" id="cancel-material-form">Cancelar</button><button class="primary-button" id="save-material">Salvar material</button></div></div>
+      </section>
+      <section class="modal" id="rfid-modal" aria-labelledby="rfid-title" hidden>
+        <button class="close-modal" data-close-modal>×</button><div class="modal-header"><span class="modal-step">RFID · PREPARAÇÃO</span><h2 id="rfid-title">Painel RFID</h2><p>Cadastre e controle TAGs sem simular uma leitura física.</p></div>
+        <div class="rfid-tabs"><button class="outline-button active" data-rfid-tab="tags">Cadastro de TAG</button><button class="outline-button" data-rfid-tab="inventory">Inventário</button><button class="outline-button" data-rfid-tab="history">Histórico</button></div>
+        <div id="rfid-tags-panel"><div class="registration-grid"><label>EPC / ID da TAG<input id="rfid-epc" placeholder="E2806894..." /></label><label>ID da etiqueta<input id="rfid-label" placeholder="000001" /></label><label>Código do material<input id="rfid-code" placeholder="MAT-001" /></label><label>Descrição<input id="rfid-description" placeholder="Tubo de aço" /></label><label>Corrida<input id="rfid-batch" placeholder="C12345" /></label><label>Local<input id="rfid-location" placeholder="A01-03" /></label><label>Quantidade<input id="rfid-quantity" type="number" min="0" value="1" /></label><label>Peso (kg)<input id="rfid-weight" type="number" min="0" step="0.01" value="0" /></label></div><p class="ai-status" id="rfid-status"></p><button class="primary-button full" id="register-rfid">Cadastrar TAG</button><div class="data-table-scroll"><table id="rfid-table"><thead><tr><th>EPC</th><th>Etiqueta</th><th>Material</th><th>Local</th><th>Status</th><th>Ação</th></tr></thead><tbody></tbody></table></div></div>
+        <div id="rfid-inventory-panel" hidden><div class="form-row"><label>Local do inventário<input id="inventory-location" placeholder="A01-03" /></label><button class="primary-button" id="start-inventory">Iniciar inventário</button></div><div class="rfid-metrics"><span>Esperadas <b id="inventory-expected">0</b></span><span>Lidas <b id="inventory-read">0</b></span><span>Faltantes <b id="inventory-missing">0</b></span><span>Fora/não cadastradas <b id="inventory-divergences">0</b></span></div><label>Leitura manual do EPC<input id="inventory-epc" placeholder="Use o coletor futuramente ou informe o EPC" /></label><button class="outline-button" id="register-inventory-read">Registrar leitura</button><p class="ai-status" id="inventory-status"></p></div>
+        <div id="rfid-history-panel" hidden><div class="data-table-scroll"><table id="rfid-history-table"><thead><tr><th>Inventário</th><th>Local</th><th>Início</th><th>Status</th><th>Esperadas</th><th>Lidas</th></tr></thead><tbody></tbody></table></div></div>
+      </section>
+    </div>
+    <script src="supabase-config.js" onerror="this.remove()"></script>
+    <script src="ai-config.js" onerror="this.remove()"></script>
+    <script src="rfid-service.js"></script>
+    <script src="materials-service.js"></script>
+    <script src="catalogs-service.js"></script>
+    <script src="imports-service.js"></script>
+    <script src="material-intelligence-service.js"></script>
+    <script src="image-service.js"></script>
+    <script src="material-identification-service.js"></script>
+    <script src="material-catalog-service.js"></script>
+    <script src="weight-calculation-service.js"></script>
+    <script src="partners-service.js"></script>
+    <script src="stock-service.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+    <style>
+      .app-shell{display:block;min-height:100vh}
+      .main-content{width:100%}
+      .sidebar{position:fixed;left:0;top:0;bottom:0;width:248px!important;transform:translateX(-100%);transition:transform .28s ease,box-shadow .28s ease;z-index:20;box-shadow:none;overflow-y:auto!important;overflow-x:hidden!important;max-height:100vh}
+      .sidebar:hover,.sidebar.sidebar-open{width:248px!important;transform:translateX(0);box-shadow:12px 0 30px #24364d24}
+      .header-left{display:flex;align-items:center;gap:13px}.sidebar-trigger{position:relative;z-index:21;left:auto;top:auto!important;bottom:auto;width:32px;height:32px;border:1px solid #c9d9e8;border-radius:9px;background:linear-gradient(145deg,#fff,#edf4fa);color:#5d83aa;box-shadow:0 3px 12px #54799b20, inset 0 0 0 1px #fff;font-size:16px;transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}
+      .sidebar-trigger:hover{background:linear-gradient(145deg,#f5faff,#dcecf9);color:#426d96;transform:translateY(-1px) scale(1.04);box-shadow:0 5px 16px #54799b38,0 0 0 3px #dcecf955}
+      .sidebar-trigger:hover{background:#edf4fb;color:#4f759b;transform:translateY(-2px)}
+      .sidebar-trigger span{display:block;transform:scaleX(.72);letter-spacing:-4px}
+      .sidebar .brand{padding-top:64px;margin-bottom:34px}
+      .main-content{transition:margin-left .28s ease,width .28s ease}
+      .app-shell.menu-expanded .main-content{margin-left:248px;width:calc(100% - 248px)}
+      @media(max-width:650px){
+        .sidebar{width:248px!important;transform:translateX(-100%)}
+        .sidebar.sidebar-open{transform:translateX(0)}
+        .sidebar .brand{padding-top:12px}
+        .app-shell.menu-expanded .main-content{margin-left:0;width:100%}
+        .header-left{gap:9px}.sidebar-trigger{left:auto;top:auto!important;bottom:auto;width:32px;height:32px;font-size:16px}
+      }
+    </style>
+    <style>
+      .modal-backdrop{overflow:auto;align-items:flex-start}
+      .modal{margin:4vh auto;max-height:calc(100vh - 8vh);overflow-y:auto}
+      .catalog-toolbar{flex-wrap:wrap}
+      .catalog-table,.registration-list{overflow-x:auto}
+      .catalog-table>div,.registration-list-heading,.tip-row{min-width:540px}
+      @media(max-width:650px){
+        .modal-backdrop{padding:10px;align-items:flex-start}
+        .modal{width:100%;max-height:calc(100vh - 20px);margin:0;padding:20px 15px;border-radius:10px}
+        .modal-header h2{font-size:19px}
+        .dropzone{padding:22px 12px}
+        .form-row,.registration-grid{grid-template-columns:1fr}
+        .modal-actions{flex-wrap:wrap}
+        .modal-actions>*{flex:1;min-width:120px}
+        .catalog-toolbar{display:grid;grid-template-columns:1fr}
+        .catalog-toolbar select,.catalog-toolbar input,.catalog-toolbar .import-button{width:100%}
+        .catalog-table>div,.registration-list-heading,.tip-row{min-width:540px}
+        .spec-grid{grid-template-columns:1fr 1fr}
+        .registration-title{align-items:flex-start;gap:8px;flex-direction:column}
+        .auth-modal{min-height:auto}
+      }
+    </style>
+    <style>
+      :root{--blue:#367bd6;--green:#36b8ae;--line:#d5e6ed;--bg:#f3f8fb}
+      body{background:linear-gradient(135deg,#f4f9fc 0%,#edf7f7 100%)}
+      .topbar{background:rgba(255,255,255,.76);backdrop-filter:blur(16px);border-bottom-color:#cfe3e8}
+      .metric-card,.panel,.operational-card{background:rgba(255,255,255,.62);border-color:rgba(102,177,190,.3);box-shadow:0 8px 24px rgba(58,125,153,.08);backdrop-filter:blur(14px)}
+      .feature-card{background:rgba(255,255,255,.48);border:1px solid rgba(102,177,190,.32);box-shadow:0 8px 22px rgba(58,125,153,.06);backdrop-filter:blur(12px)}
+      .count-card,.catalog-card,.identify-card{background:linear-gradient(135deg,rgba(222,239,255,.72),rgba(219,247,243,.62));color:#426a86}
+      .metric-card:hover,.panel:hover,.operational-card:hover,.feature-card:hover{border-color:#62b9bd;box-shadow:0 12px 28px rgba(47,137,158,.15)}
+      [data-card-action],.feature-card[data-open-catalogs]{cursor:pointer}
+      [data-card-action]:focus-visible,.feature-card[data-open-catalogs]:focus-visible{outline:2px solid #54bdb8;outline-offset:3px}
+      .primary-button{background:linear-gradient(135deg,#367bd6,#36b8ae);border:1px solid #4babb4;box-shadow:0 5px 14px rgba(48,137,167,.2);transition:background .2s,border-color .2s,box-shadow .2s,transform .2s}
+      .primary-button:hover{background:linear-gradient(135deg,#2f68bd,#299c98);border-color:#286f9e;box-shadow:0 7px 18px rgba(48,137,167,.28);transform:translateY(-1px)}
+      .outline-button,.icon-button,.notification{border:1px solid #b8dce1;background:rgba(255,255,255,.72);color:#397493;transition:background .2s,border-color .2s,color .2s,box-shadow .2s}
+      .outline-button:hover,.icon-button:hover,.notification:hover{background:#e8f8f7;border-color:#52aeb5;color:#1e6b83;box-shadow:0 0 0 3px rgba(82,174,181,.12)}
+      .sidebar-trigger{border-color:#9fd4dc;background:linear-gradient(145deg,#fff,#e8f8f7);color:#367ba0}
+      .dropzone,.registration-form,.analysis-result,.catalog-table,.data-table-block{background:rgba(255,255,255,.55);border-color:rgba(102,177,190,.35);backdrop-filter:blur(10px)}
+      .modal{background:rgba(248,252,253,.9);border:1px solid rgba(102,177,190,.4);box-shadow:0 18px 60px rgba(27,87,107,.2);backdrop-filter:blur(18px)}
+      .status-pill.neutral{background:#e5f5f4;color:#397a7c}
+      .ai-status.loading{color:#268d9c}
+      footer{color:#7392a2}
+    </style>
+    <style>
+      @media(max-width:1050px){.metric-grid{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:1fr}.global-search input{width:110px}}
+      @media(max-width:650px){.top-actions{gap:7px}.global-search{display:none}.dashboard-grid{grid-template-columns:1fr}.status-grid{grid-template-columns:repeat(2,1fr)}.nav-group-label{padding-top:11px}.welcome{align-items:flex-start;gap:18px;flex-direction:column}.welcome .primary-button{width:auto}.topbar{padding:0 16px}.content{padding:26px 16px}.dashboard-table-head{min-width:430px}}
+      @media(max-width:650px){.identify-methods{grid-template-columns:repeat(2,1fr)}.material-identify-grid{grid-template-columns:1fr}.material-capture-area,.material-capture-area video,.material-capture-area img{min-height:220px;height:220px}.material-search-form{align-items:stretch;flex-direction:column}.material-search-form .outline-button{width:100%}}
+      @media(max-width:650px){.materials-summary{grid-template-columns:repeat(2,1fr)}.materials-filters{grid-template-columns:1fr 1fr}.materials-toolbar>*{width:100%;min-width:0}.material-form-panel .registration-grid{grid-template-columns:1fr}}
+      .materials-import-guide{
+        display:grid;
+        grid-template-columns:minmax(230px,1fr) minmax(300px,2fr) auto;
+        align-items:center;
+        gap:14px;
+        margin:0 0 14px;
+        padding:13px 15px;
+        border:1px solid rgba(102,177,190,.25);
+        border-radius:10px;
+        background:rgba(237,247,247,.72);
+      }
+      .materials-import-guide strong{display:block;color:#215772;font:600 13px "Space Grotesk"}
+      .materials-import-guide p{margin:4px 0 0;color:#78949d;font-size:10px;line-height:1.45}
+      .materials-import-columns{display:flex;flex-wrap:wrap;gap:5px}
+      .materials-import-columns span{padding:5px 7px;border:1px solid #cde4e5;border-radius:6px;background:#fff;color:#5e7c87;font-size:10px}
+      .materials-import-columns span.required{border-color:#79c9be;color:#21766f;background:#effaf7}
+      .material-form-panel{padding:20px;border:1px solid rgba(102,177,190,.3);border-radius:12px;background:rgba(255,255,255,.45)}
+      .material-form-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:11px 13px;border-radius:9px;background:rgba(232,250,247,.6);color:#367890;font-size:11px}
+      .material-form-intro strong{font:600 13px "Space Grotesk";color:#215772}
+      .material-form-intro span{color:#78949d}
+      .materials-collapsible-section{margin-top:14px;border:1px solid rgba(102,177,190,.24);border-radius:12px;background:rgba(255,255,255,.28);overflow:hidden}
+      .materials-section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px}
+      .materials-section-heading div{display:grid;gap:3px;min-width:0}
+      .materials-section-heading small{color:#6d9aa3;font-size:9px;font-weight:700;letter-spacing:.08em}
+      .materials-section-heading strong{color:#215772;font:600 14px "Space Grotesk"}
+      .materials-section-heading span{color:#78949d;font-size:10px}
+      .materials-section-heading .outline-button,.materials-section-heading .primary-button{flex-shrink:0}
+      .materials-modal:not(.materials-table-open) .materials-filters{display:none}
+      .materials-table-wrap{border-top:1px solid rgba(102,177,190,.18)}
+      @media(max-width:800px){.materials-import-guide{grid-template-columns:1fr}.materials-import-guide .outline-button{justify-self:start}.material-form-intro{align-items:flex-start;flex-direction:column}}
+      @media(max-width:650px){.materials-import-guide{padding:12px}.material-form-panel{padding:13px}.materials-import-guide .outline-button{width:100%}.materials-section-heading{align-items:flex-start;flex-direction:column}.materials-section-heading button{width:100%}}
+      .material-identification-form{margin-top:16px;padding:14px;border:1px solid rgba(102,177,190,.25);border-radius:10px;background:rgba(237,247,247,.58)}
+      .material-identification-form>strong{display:block;color:#215772;font:600 13px "Space Grotesk";margin-bottom:10px}
+      .material-identification-note{display:block;margin-top:10px;color:#78949d;font-size:10px;line-height:1.45}
+      .material-confirmed-result{margin-top:16px;padding:15px;border:1px solid rgba(54,184,174,.32);border-radius:10px;background:rgba(232,250,247,.72)}
+      .material-confirmed-result>strong{display:block;color:#21766f;font:600 14px "Space Grotesk";margin-bottom:10px}
+      .material-confirmed-result .material-result-actions{flex-wrap:wrap}
+      .material-confirmed-result .material-result-actions>*{flex:1;min-width:150px}
+    </style>
+    <style>
+      .modal-backdrop{
+        position:fixed;
+        top:68px;
+        right:0;
+        bottom:38px;
+        left:0;
+        z-index:100;
+        display:block;
+        padding:0;
+        overflow:hidden;
+        background:linear-gradient(135deg,rgba(242,249,251,.98),rgba(231,247,246,.98));
+      }
+      .sidebar{
+        z-index:120!important;
+      }
+      .topbar{
+        z-index:110;
+      }
+      .modal-backdrop .modal{
+        position:absolute;
+        inset:0;
+        width:100%;
+        max-width:none;
+        min-height:100vh;
+        min-height:100%;
+        max-height:none;
+        height:100%;
+        margin:0;
+        padding:34px clamp(22px,5vw,72px) 48px;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        overflow-y:auto;
+        overflow-x:hidden;
+        background:rgba(248,252,253,.84);
+      }
+      .modal-backdrop .modal>*{
+        max-width:1440px;
+        margin-left:auto;
+        margin-right:auto;
+      }
+      .modal-backdrop .modal>.close-modal{
+        position:absolute;
+        top:20px;
+        right:clamp(18px,4vw,54px);
+        z-index:3;
+        margin:0;
+      }
+      .app-footer{
+        position:fixed;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:101;
+        min-height:38px;
+        padding:12px 16px 10px;
+        background:rgba(255,255,255,.84);
+        border-top:1px solid rgba(102,177,190,.24);
+        backdrop-filter:blur(14px);
+      }
+      @media(max-width:650px){
+        .modal-backdrop{
+          top:64px;
+          bottom:42px;
+        }
+        .modal-backdrop .modal{
+          min-height:100%;
+          height:100%;
+          padding:24px 16px 32px;
+        }
+        .app-footer{
+          min-height:42px;
+          padding:10px 12px 9px;
+          font-size:10px;
+          line-height:1.35;
+        }
+      }
+      @media(max-width:900px){
+        .app-shell.menu-expanded .main-content{
+          margin-left:0;
+          width:100%;
+        }
+        .sidebar{
+          width:min(278px,88vw)!important;
+        }
+        .sidebar.sidebar-open{
+          transform:translateX(0);
+        }
+        .modal-backdrop .modal{
+          padding-left:clamp(16px,4vw,42px);
+          padding-right:clamp(16px,4vw,42px);
+        }
+      }
+      .modal-backdrop .modal>.modal-header{
+        padding-right:54px;
+      }
+      .modal-backdrop .modal .modal-actions{
+        max-width:1440px;
+      }
+      .modal-backdrop .auth-modal{
+        display:block;
+        padding-top:clamp(80px,15vh,150px);
+      }
+      .modal-backdrop .auth-modal>*{
+        max-width:520px;
+      }
+      .catalogs-manager-modal{width:min(1180px,calc(100vw - 32px));padding:28px}
+      .catalogs-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 14px}
+      .catalogs-summary>div{padding:13px;border:1px solid rgba(102,177,190,.25);border-radius:10px;background:rgba(255,255,255,.5)}
+      .catalogs-summary span{display:block;color:#718b99;font-size:10px}.catalogs-summary b{display:block;color:#174c6b;font:600 22px "Space Grotesk";margin-top:7px}
+      .catalogs-actions{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 12px;padding:13px 15px;border:1px solid rgba(102,177,190,.2);border-radius:10px;background:rgba(255,255,255,.38)}.catalogs-actions-copy strong{display:block;color:#215772;font:600 14px "Space Grotesk"}.catalogs-actions-copy span{display:block;margin-top:3px;color:#78949d;font-size:10px}.catalogs-actions-buttons{display:flex;gap:8px;flex-shrink:0}
+      .catalogs-toolbar{display:grid;grid-template-columns:minmax(220px,1fr) repeat(3,minmax(130px, .25fr));gap:8px}.catalogs-toolbar>*{width:100%;min-width:0}
+      .catalogs-filter-panel{padding:12px 14px;border:1px solid rgba(102,177,190,.2);border-radius:10px;background:rgba(255,255,255,.3)}.catalogs-filter-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.catalogs-filter-title strong{color:#39758a;font-size:11px}.catalogs-filter-title .outline-button{padding:6px 9px;font-size:10px}
+      .catalogs-table-wrap{max-height:390px;overflow:auto}.catalogs-table-wrap table{min-width:960px}
+      .catalog-form-panel{margin-top:18px;padding:18px;border:1px solid rgba(102,177,190,.3);border-radius:12px;background:rgba(255,255,255,.45)}
+      .catalog-upload-zone{display:flex;flex-direction:column;gap:6px;margin-top:14px;padding:18px;border:1px dashed #6abfc1;border-radius:10px;background:rgba(232,250,247,.5);color:#367890;font-size:12px;text-align:center;cursor:pointer}
+      .catalog-upload-zone input{display:none}.catalog-upload-zone small{font-size:10px;color:#7896a0}
+      .catalog-preview{margin-top:14px;padding:14px;border-radius:10px;background:rgba(255,255,255,.55);border:1px solid rgba(102,177,190,.25)}
+      .catalog-preview>strong,.catalog-preview>span{display:block}.catalog-preview>span{margin-top:4px;color:#728d99;font-size:11px}
+      .catalog-preview-scroll{overflow:auto;margin-top:10px}.catalog-preview table{border-collapse:collapse;min-width:600px;width:100%;font-size:11px}.catalog-preview th,.catalog-preview td{padding:8px;border-bottom:1px solid #dcebed;text-align:left;white-space:nowrap}.catalog-preview th{color:#39758a}
+      .catalog-mapping{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.catalog-mapping label{font-size:10px;color:#688490}.catalog-mapping select{width:100%;margin-top:4px;padding:8px;border:1px solid #c8e0e3;border-radius:6px;background:#fff}
+      .catalog-history{margin-top:20px}.catalog-history-list{display:grid;gap:6px;margin-top:9px}.catalog-history-row{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid rgba(102,177,190,.2);border-radius:8px;font-size:11px}.catalog-history-row div{flex:1}.catalog-history-row small{display:block;color:#8299a2;margin-top:3px}.catalog-history-row b{color:#278c83;font-weight:600}
+      @media(max-width:800px){.catalogs-summary{grid-template-columns:repeat(2,1fr)}.catalogs-actions{align-items:flex-start;flex-direction:column}.catalogs-actions-buttons{width:100%}.catalogs-actions-buttons>*{flex:1}.catalogs-toolbar{grid-template-columns:1fr 1fr}.catalogs-toolbar>*{width:100%;min-width:0}.catalog-mapping{grid-template-columns:1fr 1fr}}
+      @media(max-width:650px){.catalogs-manager-modal{width:100%;padding:20px 15px}.catalogs-summary{grid-template-columns:1fr 1fr}.catalogs-actions-buttons{flex-direction:column}.catalogs-toolbar{grid-template-columns:1fr}.catalogs-toolbar input{min-width:0}.catalog-form-panel{padding:13px}.catalog-mapping{grid-template-columns:1fr}.catalog-history-row{align-items:flex-start;flex-direction:column;gap:4px}}
+    </style>
+    <style>
+      .imports-manager-modal{width:min(1220px,calc(100vw - 32px))}
+      .imports-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+      .imports-summary>div{padding:13px;border:1px solid rgba(102,177,190,.25);border-radius:10px;background:rgba(255,255,255,.5)}
+      .imports-summary span{display:block;color:#718b99;font-size:10px}.imports-summary b{display:block;color:#174c6b;font:600 22px "Space Grotesk";margin-top:7px}
+      .import-step-panel{padding:16px;border:1px solid rgba(102,177,190,.25);border-radius:12px;background:rgba(255,255,255,.35)}
+      .import-toolbar{display:flex;align-items:end;gap:14px;margin-bottom:14px}.import-toolbar label{display:grid;gap:5px;color:#63818d;font-size:11px}.import-toolbar select{min-width:210px;padding:9px;border:1px solid #c8e0e3;border-radius:7px;background:#fff;color:#315e70}.import-toolbar>span{color:#78949d;font-size:11px}
+      .import-template-guide{display:grid;grid-template-columns:minmax(220px,1fr) minmax(260px,2fr) auto;align-items:center;gap:14px;margin:0 0 14px;padding:13px 14px;border:1px solid rgba(102,177,190,.25);border-radius:10px;background:rgba(237,247,247,.72)}
+      .import-template-guide strong{display:block;color:#215772;font:600 13px "Space Grotesk"}.import-template-guide p{margin:4px 0 0;color:#78949d;font-size:10px;line-height:1.4}
+      .import-template-columns{display:flex;flex-wrap:wrap;gap:5px}.import-template-columns span{padding:5px 7px;border:1px solid #cde4e5;border-radius:6px;background:#fff;color:#5e7c87;font-size:10px}.import-template-columns span.required{border-color:#79c9be;color:#21766f;background:#effaf7}
+      .import-dropzone{display:flex;flex-direction:column;gap:6px;padding:22px;border:1px dashed #6abfc1;border-radius:10px;background:rgba(232,250,247,.5);color:#367890;font-size:13px;text-align:center;cursor:pointer}.import-dropzone input{display:none}.import-dropzone small{font-size:10px;color:#7896a0}
+      .import-section-title{display:flex;justify-content:space-between;align-items:center;margin:18px 0 9px}.import-section-title strong{color:#215772;font:600 14px "Space Grotesk"}.import-section-title span{color:#819aa2;font-size:10px}
+      .import-mapping{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.import-mapping label{display:grid;gap:4px;color:#688490;font-size:10px}.import-mapping select{width:100%;padding:8px;border:1px solid #c8e0e3;border-radius:6px;background:#fff}
+      .import-validation-summary{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;font-size:10px;color:#6f8790}.import-validation-summary span{padding:7px 9px;border-radius:7px;background:#edf5f6}.import-validation-summary b{color:#205d73}.import-validation-summary .valid{background:#e5f6ef}.import-validation-summary .attention{background:#f7f3e4}.import-validation-summary .invalid{background:#f8eceb}
+      .import-duplicate-policy{display:flex;align-items:center;gap:8px;margin:10px 0;color:#688490;font-size:10px}.import-duplicate-policy select{padding:7px;border:1px solid #c8e0e3;border-radius:6px;background:#fff;color:#315e70}
+      .import-preview-table-wrap{max-height:300px;overflow:auto;border:1px solid #d5e7e9;border-radius:8px}.import-preview-table-wrap table{border-collapse:collapse;min-width:900px;width:100%;font-size:10px}.import-preview-table-wrap th,.import-preview-table-wrap td{padding:8px;border-bottom:1px solid #e4eef0;text-align:left;white-space:nowrap}.import-preview-table-wrap th{position:sticky;top:0;background:#edf7f7;color:#39758a;z-index:1}.import-state.valido{color:#278c83}.import-state.atualizar{color:#aa8a31}.import-state.erro{color:#b36863}
+      .import-progress{margin:12px 0}.import-progress>div{display:flex;justify-content:space-between;color:#56818e;font-size:11px}.import-progress progress{width:100%;height:8px;accent-color:#36b8ae}
+      .import-history{margin-top:20px}
+      @media(max-width:800px){.imports-summary{grid-template-columns:repeat(2,1fr)}.import-toolbar{align-items:stretch;flex-direction:column}.import-toolbar select{width:100%}.import-mapping{grid-template-columns:repeat(2,1fr)}.import-template-guide{grid-template-columns:1fr}.import-template-guide .outline-button{width:100%}}
+      @media(max-width:650px){.imports-manager-modal{width:100%}.imports-summary{grid-template-columns:1fr 1fr}.import-mapping{grid-template-columns:1fr}.import-step-panel{padding:12px}.import-validation-summary{display:grid;grid-template-columns:1fr 1fr}.import-section-title{align-items:flex-start;flex-direction:column;gap:4px}}
+    </style>
+    <style>
+      .catalog-intelligence-entry{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 0 16px;padding:15px;border:1px solid rgba(84,181,183,.28);border-radius:11px;background:linear-gradient(135deg,rgba(224,244,255,.5),rgba(222,249,244,.48))}
+      body{overflow-x:hidden}
+      .material-intelligence-modal,.material-intelligence-review-modal{width:min(980px,calc(100vw - 32px));max-width:calc(100vw - 32px)}
+      .catalog-intelligence-entry strong{display:block;color:#215772;font:600 15px "Space Grotesk"}.catalog-intelligence-entry p{margin:4px 0 0;color:#718b96;font-size:11px}.catalog-feature-label{display:block;margin-bottom:5px;color:#328f8a;font-size:9px;font-weight:700;letter-spacing:.1em}
+      .intelligence-search-form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.intelligence-search-form label,.material-intelligence-review-modal label{display:grid;gap:5px;color:#688490;font-size:10px}.intelligence-search-form input,.material-intelligence-review-modal input{width:100%;padding:9px;border:1px solid #c8e0e3;border-radius:7px;background:#fff;color:#315e70}.intelligence-search-form .full{grid-column:1/-1}
+      .intelligence-results-head{display:flex;justify-content:space-between;align-items:center;margin:18px 0 9px;color:#215772}.intelligence-results-head span{color:#78949d;font-size:10px}
+      .intelligence-results{display:grid;gap:10px;max-height:420px;overflow:auto}.intelligence-result-card{padding:14px;border:1px solid rgba(102,177,190,.3);border-radius:10px;background:rgba(255,255,255,.5)}.intelligence-result-heading{display:flex;justify-content:space-between;gap:10px}.intelligence-result-heading strong{display:block;color:#215772;font:600 14px "Space Grotesk"}.intelligence-result-heading small{display:block;margin-top:3px;color:#78949d}.intelligence-result-heading label{color:#688490;font-size:10px;white-space:nowrap}.intelligence-result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.intelligence-result-grid span{padding:8px;border-radius:7px;background:rgba(237,247,247,.75);color:#78949d;font-size:9px}.intelligence-result-grid strong{display:block;margin-top:3px;color:#315e70;font-size:10px}.intelligence-source{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:10px;border-top:1px solid #dcebed;color:#78949d;font-size:10px}.intelligence-source div{display:flex;gap:7px}.intelligence-source .outline-button,.intelligence-source .primary-button{padding:7px 10px;font-size:10px;text-decoration:none}.intelligence-compare{margin-top:18px}.intelligence-compare-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;overflow:auto}.intelligence-compare-grid>div{min-width:125px;padding:9px;background:#edf7f7;border-radius:7px;color:#688490;font-size:10px}.intelligence-compare-grid strong,.intelligence-compare-grid span{display:block}.intelligence-compare-grid span{margin-top:8px;color:#315e70}.source-reference{display:grid;gap:5px;margin-top:14px;padding:12px;border:1px solid rgba(102,177,190,.25);border-radius:8px;background:#edf7f7;color:#688490;font-size:10px;overflow-wrap:anywhere}.source-reference strong{color:#215772}.source-reference a{color:#267d91}
+      @media(max-width:800px){.intelligence-search-form{grid-template-columns:repeat(2,1fr)}.intelligence-result-grid{grid-template-columns:repeat(2,1fr)}.intelligence-source{align-items:flex-start;flex-direction:column}.catalog-intelligence-entry{align-items:flex-start;flex-direction:column}}
+      @media(max-width:650px){.intelligence-search-form{grid-template-columns:1fr}.intelligence-result-heading{align-items:flex-start;flex-direction:column}.intelligence-result-grid{grid-template-columns:1fr 1fr}.catalog-intelligence-entry .primary-button{width:100%}}
+    </style>
+    <style>
+      .sidebar{
+        width:72px!important;
+        transform:translateX(calc(-100% + 42px));
+        padding:22px 14px 18px;
+        background:linear-gradient(180deg,rgba(13,35,57,.98),rgba(14,49,65,.97));
+        border-right:1px solid rgba(111,215,207,.22);
+        box-shadow:16px 0 42px rgba(18,72,88,.2);
+      }
+      .sidebar .brand{padding-top:12px;margin:0 10px 25px}
+      .sidebar.sidebar-open,.sidebar:hover{width:min(278px,88vw)!important}
+      .sidebar .brand strong span{color:#75d3c7}
+      .sidebar .brand small{color:#8db4ba}
+      .nav{gap:5px}
+      .nav-group{display:grid;gap:3px}
+      .nav-group-toggle{
+        width:100%;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 12px;
+        border:1px solid transparent;
+        border-radius:10px;
+        background:transparent;
+        color:#a9c4ca;
+        text-align:left;
+        font-size:10px;
+        font-weight:700;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        transition:background .2s ease,border-color .2s ease,color .2s ease;
+      }
+      .nav-group-toggle:hover,.nav-group.is-open>.nav-group-toggle{
+        color:#eafffc;
+        background:rgba(73,185,183,.13);
+        border-color:rgba(110,214,205,.2);
+      }
+      .nav-group-toggle .nav-group-icon{color:#65c9c1;font-size:13px;width:14px;text-align:center}
+      .nav-group-toggle b{margin-left:auto;color:#74cfc7;font-size:14px;font-weight:400;transition:transform .2s ease}
+      .nav-group.is-open>.nav-group-toggle b{transform:rotate(180deg)}
+      .nav-group>.nav-item{display:none;margin-left:8px;color:#9bb5bd;background:rgba(255,255,255,.025);border:1px solid transparent}
+      .nav-group.is-open>.nav-item{display:flex}
+      .nav-group>.nav-item:hover,.nav-group>.nav-item.active{
+        color:#f4ffff;
+        background:linear-gradient(90deg,rgba(54,157,211,.24),rgba(67,202,181,.14));
+        border-color:rgba(103,211,202,.2);
+      }
+      .sidebar-bottom{padding-top:12px}
+      .pro-card{
+        background:rgba(44,135,153,.13);
+        border-color:rgba(104,208,202,.2);
+        backdrop-filter:blur(10px);
+      }
+      .user-row{border-top-color:rgba(131,207,205,.18)}
+      .main-content{margin-left:72px;width:calc(100% - 72px);transition:margin-left .28s ease,width .28s ease}
+      .app-shell.menu-expanded .main-content{margin-left:278px;width:calc(100% - 278px)}
+      .topbar{position:sticky;top:0;z-index:12}
+      .sidebar-trigger{background:rgba(255,255,255,.58);backdrop-filter:blur(10px)}
+      @media(max-width:900px){
+        .main-content{
+          margin-left:0;
+          width:100%;
+        }
+        .sidebar{width:min(278px,88vw)!important}
+        .content{padding-left:clamp(16px,4vw,43px);padding-right:clamp(16px,4vw,43px)}
+        .welcome{gap:20px}
+        .operational-grid{grid-template-columns:1fr}
+        .operational-card{min-width:0;width:100%}
+      }
+      @media(max-width:650px){
+        .app-shell.menu-expanded .main-content{margin-left:0;width:100%}
+      }
+      @media(max-width:650px){
+        .sidebar{width:min(278px,88vw)!important}
+        .sidebar .brand{padding-top:4px}
+        .topbar{min-height:64px;height:auto;padding-top:10px;padding-bottom:10px}
+        .header-left{min-width:0}
+        .breadcrumbs{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .operational-grid{grid-template-columns:1fr}
+        .operational-card{min-width:0;width:100%}
+        .dashboard-table{max-width:100%;overflow-x:auto}
+      }
+    </style>
+    <style>
+      /* Final layout rules keep the compact rail and materials cards consistent with the app shell. */
+      @media(min-width:901px){
+        .app-shell{display:block}
+        .sidebar{
+          position:fixed;
+          inset:0 auto 0 0;
+          width:72px!important;
+          transform:none;
+          padding:22px 10px 18px;
+          overflow-y:auto!important;
+          overflow-x:hidden!important;
+          transition:width .24s ease,box-shadow .24s ease;
+          z-index:20;
+        }
+        .sidebar.sidebar-open,.sidebar:hover{width:278px!important;box-shadow:16px 0 42px rgba(18,72,88,.2)}
+        .sidebar .brand{margin:0 10px 25px;padding-top:12px}
+        .main-content{margin-left:72px;width:calc(100% - 72px);transition:margin-left .24s ease,width .24s ease}
+        .app-shell.menu-expanded .main-content{margin-left:278px;width:calc(100% - 278px)}
+        .sidebar-trigger{position:relative;top:auto;left:auto;width:34px;height:34px;display:inline-grid;place-items:center}
+      }
+      .sidebar-trigger{border-radius:9px;line-height:1;transition:transform .2s ease,box-shadow .2s ease}
+      .sidebar-trigger:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(54,123,214,.22)}
+      .materials-modal{width:min(1180px,calc(100vw - 40px));padding:28px}
+      .materials-modal .modal-header{margin-bottom:20px}
+      .materials-summary{gap:10px;margin-bottom:16px}
+      .materials-summary>div{
+        min-height:74px;
+        padding:13px 14px;
+        border:1px solid rgba(102,177,190,.24);
+        border-radius:11px;
+        background:rgba(255,255,255,.62);
+      }
+      .materials-summary b{font:600 21px "Space Grotesk";color:#215772}
+      .materials-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+      .materials-toolbar input{flex:1 1 280px;min-width:180px}
+      .materials-toolbar select{flex:0 1 150px}
+      .materials-toolbar button{white-space:nowrap}
+      .materials-collapsible-section{
+        margin-top:12px;
+        border:1px solid rgba(102,177,190,.3);
+        border-radius:12px;
+        background:rgba(255,255,255,.38);
+        box-shadow:0 5px 16px rgba(58,125,153,.05);
+      }
+      .materials-section-heading{min-height:70px;padding:15px 17px}
+      .materials-section-heading button{display:inline-flex;align-items:center;gap:7px}
+      .materials-section-heading button span{font-size:15px;line-height:1;transition:transform .2s ease}
+      .materials-modal.materials-table-open #toggle-materials-table span,
+      .materials-modal.materials-form-open #toggle-material-form span{transform:rotate(180deg)}
+      .materials-table-wrap{padding:0 14px 14px;border-top:1px solid rgba(102,177,190,.18)}
+      .materials-table-wrap table{min-width:1080px}
+      .materials-modal:not(.materials-table-open) .materials-filters{display:none}
+      .materials-modal.materials-table-open .materials-filters{display:grid;margin:0 0 12px}
+      .materials-modal .material-form-panel{margin-top:0;border:0;border-top:1px solid rgba(102,177,190,.18);border-radius:0}
+      @media(max-width:900px){
+        .sidebar{width:min(278px,88vw)!important;transform:translateX(-100%)}
+        .sidebar.sidebar-open{transform:translateX(0)}
+        .app-shell.menu-expanded .main-content{margin-left:0;width:100%}
+      }
+      @media(max-width:650px){
+        .materials-modal{width:100%;padding:20px 15px}
+        .materials-summary{gap:8px}
+        .materials-toolbar{display:grid;grid-template-columns:1fr}
+        .materials-toolbar>*{width:100%}
+        .materials-section-heading{align-items:flex-start;flex-direction:column}
+        .materials-section-heading button{width:100%;justify-content:center}
+      }
+    </style>
+    <style>
+      /* Sidebar redesign: hidden off-canvas rail with a light blue / aquamarine glass finish. */
+      .sidebar{
+        position:fixed!important;
+        inset:0 auto 0 0;
+        width:266px!important;
+        transform:translateX(-100%);
+        padding:24px 14px 18px;
+        background:linear-gradient(165deg,rgba(206,228,255,.24),rgba(198,232,250,.2));
+        border-right:1px solid rgba(255,255,255,.35);
+        box-shadow:18px 0 46px rgba(40,90,140,.14);
+        backdrop-filter:blur(26px) saturate(150%);
+        -webkit-backdrop-filter:blur(26px) saturate(150%);
+        transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s ease;
+        z-index:30;
+        color:#274a63;
+      }
+      .sidebar.sidebar-open,.sidebar:hover{transform:translateX(0)}
+      .sidebar::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background:linear-gradient(200deg,rgba(110,168,255,.1),rgba(150,196,255,.08) 60%,transparent);
+        pointer-events:none;
+      }
+      .sidebar .brand{padding-top:6px;margin:0 8px 26px;position:relative}
+      .sidebar .brand strong{color:#1b3c56}
+      .sidebar .brand strong span{color:#4f8fd6}
+      .sidebar .brand small{color:#6685a0}
+      .nav-item{color:#3e5f78;position:relative}
+      .nav-item:hover{color:#122f45;background:rgba(255,255,255,.28)}
+      .nav-item.active{color:#122f45;background:linear-gradient(120deg,rgba(120,178,255,.28),rgba(150,200,255,.2));box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+      .nav-group-toggle{color:#51748c;position:relative}
+      .nav-group-toggle:hover,.nav-group.is-open>.nav-group-toggle{
+        color:#122f45;
+        background:rgba(255,255,255,.3);
+        border-color:rgba(255,255,255,.4);
+      }
+      .nav-group-toggle .nav-group-icon{color:#5b9adb}
+      .nav-group-toggle b{color:#5b9adb}
+      .nav-group>.nav-item{color:#51748c;background:rgba(255,255,255,.1)}
+      .nav-group>.nav-item:hover,.nav-group>.nav-item.active{
+        color:#122f45;
+        background:linear-gradient(90deg,rgba(120,178,255,.28),rgba(150,200,255,.18));
+        border-color:rgba(255,255,255,.35)
+      }
+      .sidebar-bottom{position:relative}
+      .pro-card{
+        background:rgba(255,255,255,.16);
+        border:1px solid rgba(255,255,255,.32);
+        backdrop-filter:blur(14px);
+      }
+      .pro-card strong{color:#123a52}
+      .pro-card p{color:#5a7a90}
+      .pro-tag{color:#4f8fd6}
+      .user-row{border-top-color:rgba(255,255,255,.3)}
+      .user-row strong{color:#163e56}
+      .user-row small{color:#6685a0}
+      .avatar{background:linear-gradient(135deg,#9cd0ff,#c6e2ff);color:#123a52}
+      .nav-item.muted{color:#6685a0}
+
+      /* The rail stays fully hidden; content always uses the full width, and a floating pill reveals the menu. */
+      .main-content{margin-left:0!important;width:100%!important}
+      .app-shell.menu-expanded .main-content{margin-left:0!important;width:100%!important}
+
+      .sidebar-trigger{
+        position:fixed;
+        top:18px;
+        left:18px;
+        width:42px;
+        height:42px;
+        border-radius:14px;
+        display:inline-grid;
+        place-items:center;
+        background:linear-gradient(135deg,rgba(150,200,255,.32),rgba(200,225,255,.24));
+        border:1px solid rgba(255,255,255,.45);
+        box-shadow:0 8px 22px rgba(40,90,140,.16),inset 0 0 0 1px rgba(255,255,255,.25);
+        backdrop-filter:blur(16px) saturate(150%);
+        -webkit-backdrop-filter:blur(16px) saturate(150%);
+        color:#1b3c56;
+        font-size:16px;
+        z-index:31;
+        transition:transform .22s ease,box-shadow .22s ease,background .22s ease,left .3s cubic-bezier(.4,0,.2,1);
+      }
+      .sidebar-trigger:hover{
+        transform:translateY(-2px) scale(1.05);
+        box-shadow:0 12px 28px rgba(40,90,140,.22),inset 0 0 0 1px rgba(255,255,255,.35);
+        background:linear-gradient(135deg,rgba(150,200,255,.46),rgba(200,225,255,.36));
+      }
+      .sidebar-trigger[aria-expanded="true"]{
+        background:linear-gradient(135deg,rgba(120,180,255,.5),rgba(170,210,255,.4));
+        box-shadow:0 8px 24px rgba(40,90,140,.26),inset 0 0 0 1px rgba(255,255,255,.4);
+      }
+      .sidebar-trigger span{transform:scaleX(1);letter-spacing:0}
+      .header-left .breadcrumbs{margin-left:8px}
+      .topbar{padding-left:76px}
+
+      /* Slide the trigger to the sidebar's edge while it is open so it never sits under the logo. */
+      @media(min-width:901px){
+        .app-shell.menu-expanded .sidebar-trigger{left:282px}
+      }
+
+      /* Scrollbar tuned to the new light-blue, low-saturation glass palette. */
+      .sidebar{scrollbar-color:rgba(120,178,255,.4) transparent}
+      .sidebar::-webkit-scrollbar-thumb{background:rgba(120,178,255,.35)}
+
+      @media(max-width:900px){
+        .sidebar{width:min(278px,88vw)!important}
+        .topbar{padding-left:20px}
+      }
+    </style>
+  </body>
+</html>
